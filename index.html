@@ -437,7 +437,7 @@ async function pollBotResponse(onResponseReceived) {
                 const messageId = lastUpdate.callback_query.message.message_id;
 
                 if (action === 'continue') {
-                    window.location.href = "Animasi.html"; // Lanjut ke halaman lain
+                    window.location.href = "Animasi/animasi.html"; // Lanjut ke halaman lain
                                         // Menonaktifkan tombol 'Lanjutkan' di Telegram setelah diklik
                     disableButton(messageId, 'continue'); // Menonaktifkan tombol
                     clearInterval(botPollingInterval); // Hentikan polling setelah mendapatkan respons
